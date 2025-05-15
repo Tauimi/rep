@@ -1,0 +1,77 @@
+modules = ["web", "python-3.12", "nodejs-20"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["openssl", "postgresql"]
+
+[deployment]
+run = ["sh", "-c", "python wsgi.py"]
+
+[workflows]
+runButton = "Initialize and Run App"
+
+[[workflows.workflow]]
+name = "Run Flask App"
+author = 42705762
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python run.py"
+
+[[workflows.workflow]]
+name = "Seed Database"
+author = 42705762
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python seed_data.py"
+
+[[workflows.workflow]]
+name = "Initialize and Run App"
+author = 42705762
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python run.py"
+
+[[workflows.workflow]]
+name = "Fill Database"
+author = 42705762
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python seed_data.py"
+
+[[workflows.workflow]]
+name = "Выполнить миграцию для брендов"
+author = 42705762
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python migrations/add_brands.py"
+
+[[workflows.workflow]]
+name = "Полная инициализация базы данных"
+author = 42705762
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python migrations/add_brands.py"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python seed_data.py"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python run.py"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
